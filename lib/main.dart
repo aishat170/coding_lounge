@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:take_note/controllers/view_controller.dart';
+import 'package:take_note/router.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -21,7 +22,7 @@ class _MainAppState extends State<MainApp> {
     themes.add(
       ThemeData(
         brightness: brightness,
-        colorSchemeSeed: const Color.fromARGB(255, 255, 0, 170),
+        colorSchemeSeed: const Color.fromARGB(255, 47, 0, 255),
         textTheme: GoogleFonts.geologicaTextTheme(
           const TextTheme(
             headlineLarge: TextStyle(fontWeight: FontWeight.w600),
@@ -41,12 +42,22 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
+    ScreenUtil.init(context, designSize: const Size(390, 844));
+    return Obx((){
+      final brightness = _viewController.state.value;
+      final themeMode = switch(brightness) {
+        Brightness.light => ThemeMode.light,
+        Brightness.dark => ThemeMode.dark,
+      };
+      return GetMaterialApp(
+        title: 'Take Note',
+        debugShowCheckedModeBanner: false,
+        themeMode: themeMode,
+        theme : _themes[0],
+        darkTheme: _themes[1],
+        initialRoute: '/onboarding',
+        getPages: appScreens,
+      );
+    });
   }
 }
