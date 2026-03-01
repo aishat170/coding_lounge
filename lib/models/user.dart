@@ -3,19 +3,22 @@ class User {
   String name;
   String email;
   DateTime creationDate;
+  String? password;
 
   User({
     this.id, 
     required this.name, 
     required this.email,
     required this.creationDate,
+    this.password,
   });
 
-User.fromJson(Map<String, dynamic> json) 
+User.fromJson(Map<String, dynamic> json)
     : name = json["name"], 
-    id = json["id"], 
-    email = json["email"], 
-    creationDate = json["creationDate"];
+      id = json["id"], 
+      email = json["email"], 
+      creationDate = json["creationDate"],
+      password = json["password"] ?? "";
 
   Map<String, dynamic> toJson() => {
     "name" : name,
