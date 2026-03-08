@@ -11,6 +11,7 @@ class DataController extends GetxController{
   List<String> savedNotes = <String>[].obs;
 
   var loaded = false.obs;
+  User? appUser;
 
   Future<void> serializeNote() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,7 +46,7 @@ class DataController extends GetxController{
     var id = uuid.v1();
 
     var bytes = utf8.encode(password);
-    Digest digest = sha256.convert(bytes);
+    Digest digest = sha256.convert(bytes); 
     var encryptedPass = digest.toString();
 
     User newUser = User(name: name, email: email, creationDate: DateTime.now(), id: id, password : encryptedPass);
@@ -53,6 +54,32 @@ class DataController extends GetxController{
     String userInfo = json.encode(newUser);
     await prefs.setString("com.aishat.Take_Note_User", userInfo);
     return true;
+  }
+
+  Future<bool> getUser(String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var savedUser = prefs.getString("com.aishat.Take_Note_User");
+    if (savedUser != null) {
+      var user = User.fromJson(json.decode(savedUser));
+
+      if(email == user.email) {
+
+        var bytes = utf8.encode(password);
+        Digest digest = sha256.convert(bytes); 
+        var encryptedPass = digest.toString();
+
+        if(encryptedPass == user.password) {
+          appUser = user;
+          return true; 
+        } else {
+          false;
+        }
+        
+      } else {
+        return false;
+      }
+    }
+    return false;
   }
 }
 
