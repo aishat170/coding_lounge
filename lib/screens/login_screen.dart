@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 _emailField(),
                 _passwordField(),
+                _submitButton(context),
                 if (!_isLoading) _modeSwitcher(),
                 const Divider(height: 30),
               ],
@@ -167,16 +168,56 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget _submitButton(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 50.h),
+      width: 300.w,
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          elevation: 2,
+          padding: EdgeInsets.symmetric(horizontal: 70.w, vertical: 15.h),
+        ),
+        icon: Padding(
+          padding: EdgeInsets.only(right: 8.w),
+          child: Text(
+            _isSignIn ? 'Sign in' : 'Sign up',
+            style: GoogleFonts.geologica(
+              fontWeight: FontWeight.w300,
+              fontSize: 18.sp,
+            ),
+          ),
+        ),
+        label: _isLoading
+            ? SizedBox(
+                width: 14.w,
+                height: 14.h,
+                child: const CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.login),
+                    onPressed: _isLoading
+            ? null
+            : () async {
+                _failedAuth = false;
+                FocusScope.of(context).requestFocus(FocusNode());
+                if (await _saveForm()) {
+                  await Future.delayed(
+                    const Duration(milliseconds: 250),
+                  ).then(onCorrectAuth);
+                }
+              },
+      ),
+    );
+  }
+
   void onCorrectAuth(_){
     if (!_isSignIn) {
       ScaffoldMessenger.of(context).showSnackBar(_welcomeSnackBar);
-    } else {
-      Get.offNamedUntil('/auth', (route) => route.settings.name == '/home');
     }
+      Get.offNamed('/home');
   }
 
   Future<bool> _saveForm() async{
-    if(_formKey.currentState!.validate()) {
+    if(!_formKey.currentState!.validate()) {
       return false;
     }
     try {

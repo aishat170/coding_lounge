@@ -49,7 +49,13 @@ class DataController extends GetxController{
     Digest digest = sha256.convert(bytes); 
     var encryptedPass = digest.toString();
 
-    User newUser = User(name: name, email: email, creationDate: DateTime.now(), id: id, password : encryptedPass);
+    User newUser = User(
+      name: name, 
+      email: email, 
+      creationDate: DateTime.now(), 
+      id: id, 
+      password : encryptedPass
+    );
   
     String userInfo = json.encode(newUser);
     await prefs.setString("com.aishat.Take_Note_User", userInfo);
@@ -58,7 +64,9 @@ class DataController extends GetxController{
 
   Future<bool> getUser(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     var savedUser = prefs.getString("com.aishat.Take_Note_User");
+    
     if (savedUser != null) {
       var user = User.fromJson(json.decode(savedUser));
 

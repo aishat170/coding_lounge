@@ -6,6 +6,6 @@ import 'package:take_note/screens/onboarding.dart';
 
 final List<GetPage> appScreens = [
   GetPage(name: '/onboarding', page: () => OnboardingScreen()),
-  GetPage(name: '/auth', page: () => LoginScreen(), binding: (DataBinding())),
+  GetPage(name: '/auth', page: () => LoginScreen(), bindings: [DataBinding()]),
   GetPage(name: '/home', page: () => HomeScreen()),
 ];

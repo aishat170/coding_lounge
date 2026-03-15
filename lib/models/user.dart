@@ -17,7 +17,7 @@ User.fromJson(Map<String, dynamic> json)
     : name = json["name"], 
       id = json["id"], 
       email = json["email"], 
-      creationDate = json["creationDate"],
+      creationDate = DateTime.parse(json["creationDate"]),
       password = json["password"] ?? "";
 
   Map<String, dynamic> toJson() => {

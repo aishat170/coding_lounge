@@ -5,6 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:take_note/controllers/view_controller.dart';
 import 'package:take_note/router.dart';
 
+void main() {
+  runApp(const MainApp());
+}
+
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
