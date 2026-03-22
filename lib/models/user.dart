@@ -15,7 +15,7 @@ class User {
 
 User.fromJson(Map<String, dynamic> json)
     : name = json["name"], 
-      id = json["id"], 
+      id = json["id"] ?? "",
       email = json["email"], 
       creationDate = DateTime.parse(json["creationDate"]),
       password = json["password"] ?? "";
@@ -24,7 +24,8 @@ User.fromJson(Map<String, dynamic> json)
     "name" : name,
     "id" : id,
     "email" : email,
-    "creationDate" : creationDate.toIso8601String,
+    "creationDate" : creationDate.toIso8601String(),
+    "password" : password,
   };
 }
 
