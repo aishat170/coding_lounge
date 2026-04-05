@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:take_note/controllers/view_controller.dart';
 import 'package:take_note/utils/app_colors.dart';
 import 'package:get/get.dart';

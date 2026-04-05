@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:get/get.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -10,12 +10,12 @@ class OnboardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body : Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Hello, Note Taker!', 
+              'Hello, Note Taker!',
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center,
             ),
@@ -31,12 +31,12 @@ class OnboardingScreen extends StatelessWidget {
               ),
               onPressed: () {
                 Get.toNamed('/auth');
-              }, 
+              },
               child: Text(
-                'Let\'s Go!', 
+                'Let\'s Go!',
                 style: GoogleFonts.geologica(
                   fontWeight: FontWeight.w300,
-                  fontSize: 18.sp
+                  fontSize: 18.sp,
                 ),
               ),
             ),

@@ -194,7 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const CircularProgressIndicator(strokeWidth: 2),
               )
             : const Icon(Icons.login),
-                    onPressed: _isLoading
+        onPressed: _isLoading
             ? null
             : () async {
                 _failedAuth = false;
@@ -209,24 +209,23 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void onCorrectAuth(_){
+  void onCorrectAuth(_) {
     if (!_isSignIn) {
       ScaffoldMessenger.of(context).showSnackBar(_welcomeSnackBar);
     }
-      Get.offNamed('/home');
+    Get.toNamed('/home');
   }
 
-  Future<bool> _saveForm() async{
-    if(!_formKey.currentState!.validate()) {
+  Future<bool> _saveForm() async {
+    if (!_formKey.currentState!.validate()) {
       return false;
     }
     try {
       setState(() {
         _isLoading = true;
       });
-      if(_isSignIn) {
+      if (_isSignIn) {
         return await _dataController.getUser(_email, _password);
-
       } else {
         return await _dataController.createUser(_name, _email, _password);
       }

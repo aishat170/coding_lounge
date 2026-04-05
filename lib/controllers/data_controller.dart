@@ -6,24 +6,24 @@ import 'package:take_note/models/user.dart';
 import 'package:uuid/uuid.dart';
 import 'package:crypto/crypto.dart';
 
-class DataController extends GetxController{
-  List<Note> notes = <Note>[].obs;    
+class DataController extends GetxController {
+  List<Note> notes = <Note>[].obs;
   List<String> savedNotes = <String>[].obs;
 
   var loaded = false.obs;
   var appUser = User(name: "", email: "", creationDate: DateTime.now()).obs;
 
-  Future<void> serializeNote() async {
+  Future<bool> serializeNote() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(savedNotes.isNotEmpty) {
+    if (savedNotes.isNotEmpty) {
       savedNotes.clear();
     }
 
-    for(int i = 0; i < notes.length; i++) {
+    for (int i = 0; i < notes.length; i++) {
       String note = json.encode(notes[i]);
       savedNotes.add(note);
     }
-    await prefs.setStringList("com.aishat.Take_Note", savedNotes);
+    return await prefs.setStringList("com.aishat.Take_Note", savedNotes);
   }
 
   void deserializeNote() async {
@@ -32,12 +32,35 @@ class DataController extends GetxController{
     if (fromMem != null) {
       savedNotes = fromMem;
       notes.clear();
-      for(int i = 0; i <savedNotes.length; i++) {
+      for (int i = 0; i < savedNotes.length; i++) {
         Note note = Note.fromJson(json.decode(savedNotes[i]));
         notes.add(note);
       }
     }
     loaded(true);
+  }
+
+  Future<bool> putTaskItemsToServer(Note note) async {
+    var uuid = Uuid();
+    var id = uuid.v1();
+    note.id = id.toString();
+    notes.add(note);
+    return await serializeNote();
+  }
+
+  Future<bool> updateTaskItemToServer(Note note) async {
+    for (int i = 0; i < notes.length; i++) {
+      if (notes[i].id == note.id) {
+        notes[i] = note;
+        break;
+      }
+    }
+    return await serializeNote();
+  }
+
+  Future<bool> deleteTaskItemToServer(Note note) async {
+    notes.removeWhere((n) => n.id == note.id);
+    return await serializeNote();
   }
 
   Future<bool> createUser(String name, String email, String password) async {
@@ -46,19 +69,19 @@ class DataController extends GetxController{
     var id = uuid.v1();
 
     var bytes = utf8.encode(password);
-    Digest digest = sha256.convert(bytes); 
+    Digest digest = sha256.convert(bytes);
     var encryptedPass = digest.toString();
 
     User newUser = User(
-      name: name, 
-      email: email, 
-      creationDate: DateTime.now(), 
-      id: id, 
-      password : encryptedPass
+      name: name,
+      email: email,
+      creationDate: DateTime.now(),
+      id: id,
+      password: encryptedPass,
     );
-  
+
     String userInfo = json.encode(newUser);
-    await prefs.setString("com.aishat.Take_Note_User", userInfo);
+    await prefs.setString("com.chidi.Take_Note_User", userInfo);
     appUser(newUser);
     return true;
   }
@@ -66,24 +89,22 @@ class DataController extends GetxController{
   Future<bool> getUser(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var savedUser = prefs.getString("com.aishat.Take_Note_User");
-    
+    var savedUser = prefs.getString("com.chidi.Take_Note_User");
+
     if (savedUser != null) {
       var user = User.fromJson(json.decode(savedUser));
 
-      if(email == user.email) {
-
+      if (email == user.email) {
         var bytes = utf8.encode(password);
-        Digest digest = sha256.convert(bytes); 
+        Digest digest = sha256.convert(bytes);
         var encryptedPass = digest.toString();
 
-        if(encryptedPass == user.password) {
+        if (encryptedPass == user.password) {
           appUser(user);
-          return true; 
+          return true;
         } else {
           false;
         }
-        
       } else {
         return false;
       }
@@ -91,4 +112,3 @@ class DataController extends GetxController{
     return false;
   }
 }
-
