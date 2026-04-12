@@ -9,6 +9,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:take_note/widgets/home_widget.dart';
 import 'package:take_note/widgets/note_display_widget.dart';
 import 'package:take_note/widgets/note_widget.dart';
+import 'package:take_note/widgets/profile_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,7 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
         viewController: _viewController,
       ),
     );
-    pages.add(Text("Profile"));
+    pages.add(
+      ProfileWidget(
+        dataController: _dataController,
+        viewController: _viewController,
+      ),
+    );
     super.initState();
   }
 
